@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>REGISTRO DE INGRESOS</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/mis-estilos-Ingresos.css">
+		<link rel="stylesheet" type="text/css" href="css/mis-estilos-Formulario.css">
+		<script src="js/jquery.js"></script>
+	</head>
+	<body>
+		
+		<div class="navbar navbar-default navbar-fixed-top naveg" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					</button>
+					
+					<button type="button" class="btn btn-default btn-lg">
+					<span class="glyphicon glyphicon-chevron-left"></span>
+					<!-- <a class="navbar-brand titulo">PigBudget</a> -->
+					</button>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#">Perfil</a></li>
+						<li><a href="#">Ingresos</a></li>
+						<li><a href="#">Egresos</a></li>
+					</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+		</div>
+		<br/>
+		<br/>
+		
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="titulo">REGISTRO</h3>
+				</div>
+			</div>
+			<div class="form-horizontal" role="form" id="ingreso-form">
+				<div class="form-group control-group type">
+					<label for="ingreso" class="col-sm-2 control-label">Tipo</label>
+					<div class="col-sm-10 dropdown1">
+						<select id="ingreso" class="form-control dropdown col-sm-10 ingreso">
+							<option value="0">Seleccione tipo</option>
+							<option value="-1" class="new">Nuevo</option>
+						</select>
+						<button class="btn btn-default">Nuevo</button>
+					</div>
+				</div>
+			<!-- </div> -->		
+			
+			
+				<div class=" form-inline nuevo-tipo" role="form" style="display:none">
+					<label for="ingreso" class="col-sm-2 control-label">Nuevo Tipo de Ingreso</label>
+					</br>
+					<div class="col-sm-10">
+						</br>
+						<input type="text" class="form-control" id="ingreso1" placeholder="¿Por qué recibiste el dinero?">
+						</br>
+						<button class="btn btn-default guardar">Guardar</button>
+						<button id="volver-form" class="btn btn-default">Volver</button>
+					</div>
+				</div>
+			
+					
+			<!-- <div class="form-horizontal" role="form"> -->		
+				<div class="form-group control-group mont">
+					<label for="monto" class="col-sm-2 control-label">Monto</label>
+					<div class="col-sm-10">
+						<input type="number" class="form-control monto" id="monto" placeholder="¿Cuánto dinero recibiste?" min="0" step="0.1">
+					</div>
+				</div>
+				<div class="form-group control-group fech">
+					<label for="fecha" class="col-sm-2 control-label">Fecha</label>
+					<div class="col-sm-10">
+						<input type="date" class="form-control date" id="date">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button id="submit" type="submit" class="btn btn-success guardar">Guardar</button>
+						<button id="volver" type="button" class="btn btn-success">Volver</button>
+					</div>
+				</div>
+			<!-- </div> -->
+		</div>
+		
+		<script>
+			$(document).ready(function(){ // cuando este listo el documento
+				$('.dropdown').on('change', function(e){
+					//alert("aqui");
+					var a = this.options[this.selectedIndex].value;
+					if(a === '-1'){
+						$(this).hide();
+						$('.form-group').hide();
+						$('.nuevo-tipo').show();
+						$('.guardar').on('click', function(e){
+							
+							var nuevoIngreso = document.getElementById("ingreso1").value;
+							//alert(nuevoIngreso);
+							var JSONObjectIngreso = {
+								"nombreIngreso":  nuevoIngreso,
+								"descripcionIngreso": "esto es nuevo"
+							};
+							//alert(JSON.stringify(JSONObjectIngreso));
+							$.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
+								//var muestra = JSON.stringify(datos);
+								//alert(muestra);
+								$('#ingreso').empty();
+								$('#ingreso').append('<option value="0">Seleccione Tipo</option><option value="-1" class="new">Nuevo</option>');
+								$.get('rest.php').done(function(resultado){
+									for(var i=0; i<resultado.length; ++i){
+										var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
+										//alert(cadena);
+										$(".dropdown").append(cadena);
+										}
+									});
+								}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+								$('#ingreso').show();
+								$('.form-group').show();
+								$('.nuevo-tipo').hide();
+							
+						});
+						
+					}
+				});
+				$('#volver-form').on('click', function(e){
+					$('#ingreso').show();
+					$('.form-group').show();
+					$('.nuevo-tipo').hide();
+				});
+				$.get('rest.php').done(function(resultado){
+					for(var i=0; i<resultado.length; ++i){
+						var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
+						//alert(cadena);
+						$(".dropdown").append(cadena);
+					}
+				});//metodo para obtener tipos de ingreso
+				
+				$('#submit').on('click', function(e){ //captura evento click a boton submit
+						
+					var ingreso = document.getElementById("ingreso").value; //var ingreso igual al valor de input ingreso
+					var monto = document.getElementById("monto").value; //var monto igual al valor de input monto
+					var fecha = document.getElementById("date").value; //var fecha igual al valor de input fecha
+					//validar valores vacios
+					if (ingreso === '0' || ingreso === '-1') {
+						//alert("No selecciono un tipo de ingreso!");
+						$('.type').addClass('has-error');
+					};
+					if(monto === ''){
+						//alert("No ingreso el monto del ingreso");
+						$('.mont').addClass('has-error');
+					};
+					if(fecha === ''){
+						//alert("No selecciono una fecha");
+						$('.fech').addClass('has-error');
+					};
+					if (ingreso !== '0' && ingreso !== '-1' && monto !== '' && fecha !== ''){
+
+						$('.type').removeClass('has-error');
+						$('.mont').removeClass('has-error');
+						$('.fech').removeClass('has-error');
+						var cadena = "<tr><td>";
+						cadena += ingreso;
+						cadena += "</td><td>";
+						cadena += monto;
+						cadena += "</td><td>";
+						cadena += fecha;
+						cadena += "</td></tr>";
+						alert(cadena);
+						
+						//$.get('http://localhost/rest.php?alguna_cosa=123&otra_cosa=321').done(function(resultado)
+						var JSONObject= { // objeto JSON con valores de inputs
+							"tipoIngreso":ingreso,
+							"montoIngreso":monto,
+							"fechaIngreso": fecha
+						};
+						$.post("rest.php", JSONObject).done(function( data ) { //AJAX con jquery envia a rest.php objeto JSON
+							window.location="ingresos.html";
+							var show = JSON.stringify (data); //show = cadena de objeto JSON
+							alert( "Data Loaded: " + show ); //muestra cadena de objeto json
+						}).error(function(){alert("error!!!")}); //en caso de error muestra mensaje
+					}
+					else{
+						alert('Errores en el formulario marcados con rojo');
+					};
+				});
+				$('#volver').on('click', function(e){
+					window.location="ingresos.html";
+				});
+			});
+		</script>
+		<script type="text/javascript" src="js/bootstrap.js"></script>
+		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+	</body>
+</html>

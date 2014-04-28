@@ -1,0 +1,4 @@
+div.form-nuevo-ingreso{
+    border-radius:30%;
+    border-color:#a8d324; 
+}

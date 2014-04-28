@@ -1,0 +1,43 @@
+.naveg{
+    background-color: #a8d324;
+}
+.navbar-default .navbar-brand{
+    color: #fff;
+}
+.navbar-default .navbar-nav>.active>a{
+    color: #fff;
+    background-color: #669900;
+}
+.navbar-default .navbar-nav>li>a{
+    color: #fff;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus{
+    background-color: #669900;   
+}
+.navbar-default .navbar-toggle{
+    border-color: #669900;
+}
+.navbar-default .navbar-toggle .icon-bar{
+    background-color: #fff;
+}
+.navbar-inverse .navbar-toggle{
+    border-color: #a8d324;
+}
+.btn-default{
+    color:#FFF;
+    background-color:#a8d324;
+    border-color:#a8d324;
+}
+.btn-default:hover,.btn-default:focus,.btn-default:active,.btn-default.active,.open .dropdown-toggle.btn-default{
+    color:#fff;
+    background-color:#669900;
+    border-color:#669900;
+}
+.table>thead>tr>td.success,.table>tbody>tr>td.success,.table>tfoot>tr>td.success,.table>thead>tr>th.success,.table>tbody>tr>th.success,.table>tfoot>tr>th.success,.table>thead>tr.success>td,.table>tbody>tr.success>td,.table>tfoot>tr.success>td,.table>thead>tr.success>th,.table>tbody>tr.success>th,.table>tfoot>tr.success>th{
+    background-color:#a8d324
+}
+.guardar{
+    color:#fff;
+    background-color:#a8d324;
+    border-color:#4cae4c;
+}
