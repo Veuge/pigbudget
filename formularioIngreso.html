@@ -15,15 +15,15 @@
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
 					</button>
 					
 					<button type="button" class="btn btn-default btn-lg">
-					<span class="glyphicon glyphicon-chevron-left"></span>
-					<!-- <a class="navbar-brand titulo">PigBudget</a> -->
+						<span class="glyphicon glyphicon-chevron-left"></span>
+						<!-- <a class="navbar-brand titulo">PigBudget</a> -->
 					</button>
 				</div>
 				<div class="collapse navbar-collapse">
@@ -32,8 +32,8 @@
 						<li><a href="#">Ingresos</a></li>
 						<li><a href="#">Egresos</a></li>
 					</ul>
-					</div><!--/.nav-collapse -->
-				</div>
+				</div><!--/.nav-collapse -->
+			</div>
 		</div>
 		<br/>
 		<br/>
@@ -65,7 +65,7 @@
 						</br>
 						<input type="text" class="form-control" id="ingreso1" placeholder="¿Por qué recibiste el dinero?">
 						</br>
-						<button class="btn btn-default guardar">Guardar</button>
+						<button class="btn btn-default" id="guardar">Guardar</button>
 						<button id="volver-form" class="btn btn-default">Volver</button>
 					</div>
 				</div>
@@ -95,48 +95,6 @@
 		
 		<script>
 			$(document).ready(function(){ // cuando este listo el documento
-				$('.dropdown').on('change', function(e){
-					//alert("aqui");
-					var a = this.options[this.selectedIndex].value;
-					if(a === '-1'){
-						$(this).hide();
-						$('.form-group').hide();
-						$('.nuevo-tipo').show();
-						$('.guardar').on('click', function(e){
-							
-							var nuevoIngreso = document.getElementById("ingreso1").value;
-							//alert(nuevoIngreso);
-							var JSONObjectIngreso = {
-								"nombreIngreso":  nuevoIngreso,
-								"descripcionIngreso": "esto es nuevo"
-							};
-							//alert(JSON.stringify(JSONObjectIngreso));
-							$.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
-								//var muestra = JSON.stringify(datos);
-								//alert(muestra);
-								$('#ingreso').empty();
-								$('#ingreso').append('<option value="0">Seleccione Tipo</option><option value="-1" class="new">Nuevo</option>');
-								$.get('rest.php').done(function(resultado){
-									for(var i=0; i<resultado.length; ++i){
-										var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
-										//alert(cadena);
-										$(".dropdown").append(cadena);
-										}
-									});
-								}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
-								$('#ingreso').show();
-								$('.form-group').show();
-								$('.nuevo-tipo').hide();
-							
-						});
-						
-					}
-				});
-				$('#volver-form').on('click', function(e){
-					$('#ingreso').show();
-					$('.form-group').show();
-					$('.nuevo-tipo').hide();
-				});
 				$.get('rest.php').done(function(resultado){
 					for(var i=0; i<resultado.length; ++i){
 						var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
@@ -144,7 +102,61 @@
 						$(".dropdown").append(cadena);
 					}
 				});//metodo para obtener tipos de ingreso
-				
+				$('.dropdown').on('change', function(e){
+					//alert("aqui");
+					var a = this.options[this.selectedIndex].value;
+					if(a === '-1'){
+						$(this).hide(); //esconde dropdown
+						$('.form-group').hide(); //esconde formulario
+						$('.nuevo-tipo').show(); //muestra form nuevo tipo de ingreso
+						
+						$('#guardar').on('click', function(e){
+							
+							var nuevoIngreso = document.getElementById("ingreso1").value;
+							//VALIDACION PARA NUEVO TIPO DE INGRESO!
+							$.get('rest.php').done(function(resultado){
+								if (nuevoIngreso === '') { // si el campo esta vacio
+									alert("ERROR!");
+									$('.nuevo-tipo').addClass('has-error');
+								}
+								else if{
+									for(var i=0; i<resultado.length; ++i){
+										if(nuevoIngreso === resultado[i].nombreIngreso)
+										{
+											alert("TIPO DE GASTO YA EXISTENTE!");
+											$('.nuevo-tipo').addClass('has-error');
+											break;
+										}
+									}
+								}
+								else{
+									var JSONObjectIngreso = {
+										"nombreIngreso":  nuevoIngreso,
+										"descripcionIngreso": "esto es nuevo"
+									};
+									$.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
+										$('#ingreso').empty();
+										$('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
+										$.get('rest.php').done(function(resultado){
+											for(var i=0; i<resultado.length; ++i){
+												var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
+													//alert(cadena);
+												$("#ingreso").append(cadena);
+											}
+										}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+										$('#ingreso').show();
+										$('.form-group').show();
+										$('.nuevo-tipo').hide();
+									}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+								}; 
+							});
+						}
+					});
+				$('#volver-form').on('click', function(e){
+					$('#ingreso').show();
+					$('.form-group').show();
+					$('.nuevo-tipo').hide();
+				});
 				$('#submit').on('click', function(e){ //captura evento click a boton submit
 						
 					var ingreso = document.getElementById("ingreso").value; //var ingreso igual al valor de input ingreso
