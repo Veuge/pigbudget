@@ -102,6 +102,7 @@
 						$(".dropdown").append(cadena);
 					}
 				});//metodo para obtener tipos de ingreso
+
 				$('.dropdown').on('change', function(e){
 					//alert("aqui");
 					var a = this.options[this.selectedIndex].value;
@@ -114,44 +115,27 @@
 							
 							var nuevoIngreso = document.getElementById("ingreso1").value;
 							//VALIDACION PARA NUEVO TIPO DE INGRESO!
-							$.get('rest.php').done(function(resultado){
-								if (nuevoIngreso === '') { // si el campo esta vacio
-									alert("ERROR!");
-									$('.nuevo-tipo').addClass('has-error');
-								}
-								else if{
+							var JSONObjectIngreso = {
+								"nombreIngreso":  nuevoIngreso,
+								"descripcionIngreso": "esto es nuevo"
+							};
+							$.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
+								$('#ingreso').empty();
+								$('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
+								$.get('rest.php').done(function(resultado){
 									for(var i=0; i<resultado.length; ++i){
-										if(nuevoIngreso === resultado[i].nombreIngreso)
-										{
-											alert("TIPO DE GASTO YA EXISTENTE!");
-											$('.nuevo-tipo').addClass('has-error');
-											break;
-										}
-									}
-								}
-								else{
-									var JSONObjectIngreso = {
-										"nombreIngreso":  nuevoIngreso,
-										"descripcionIngreso": "esto es nuevo"
-									};
-									$.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
-										$('#ingreso').empty();
-										$('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
-										$.get('rest.php').done(function(resultado){
-											for(var i=0; i<resultado.length; ++i){
-												var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
+										var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
 													//alert(cadena);
-												$("#ingreso").append(cadena);
-											}
-										}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
-										$('#ingreso').show();
-										$('.form-group').show();
-										$('.nuevo-tipo').hide();
-									}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
-								}; 
-							});
-						}
-					});
+										$("#ingreso").append(cadena);
+									}
+								}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+								$('#ingreso').show();
+								$('.form-group').show();
+								$('.nuevo-tipo').hide();
+							}).error(function(){alert("POR QUE SIGUES MAL!!!???")}); 
+						});
+					};
+				});
 				$('#volver-form').on('click', function(e){
 					$('#ingreso').show();
 					$('.form-group').show();
