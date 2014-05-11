@@ -30,7 +30,7 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="#">Perfil</a></li>
 						<li><a href="#">Ingresos</a></li>
-						<li><a href="#">Egresos</a></li>
+						<li><a href="../moduloGastos/ingresos.html">Gastos</a></li>
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>
@@ -58,7 +58,7 @@
 			<!-- </div> -->		
 			
 			
-				<div class=" form-inline nuevo-tipo" role="form" style="display:none">
+				<div class="form-inline" role="form" style="display:none" id="nuevo-tipo">
 					<label for="ingreso" class="col-sm-2 control-label">Nuevo Tipo de Ingreso</label>
 					</br>
 					<div class="col-sm-10">
@@ -109,37 +109,56 @@
 					if(a === '-1'){
 						$(this).hide(); //esconde dropdown
 						$('.form-group').hide(); //esconde formulario
-						$('.nuevo-tipo').show(); //muestra form nuevo tipo de ingreso
+						$('#nuevo-tipo').show(); //muestra form nuevo tipo de ingreso
 						
 						$('#guardar').on('click', function(e){
 							
 							var nuevoIngreso = document.getElementById("ingreso1").value;
+							var flag = true
 							//VALIDACION PARA NUEVO TIPO DE INGRESO!
-							var JSONObjectIngreso = {
-								"nombreIngreso":  nuevoIngreso,
-								"descripcionIngreso": "esto es nuevo"
-							};
-							$.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
-								$('#ingreso').empty();
-								$('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
-								$.get('rest.php').done(function(resultado){
-									for(var i=0; i<resultado.length; ++i){
-										var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
-													//alert(cadena);
-										$("#ingreso").append(cadena);
+							$.get('rest.php').done(function(resultado){
+								for(var i=0; i<resultado.length; ++i){
+									if (flag && nuevoIngreso === resultado[i]) {
+										flag = false;
+										$("#nuevo-tipo").addClass("has-error");
+										alert("Ya existe ese tipo de ingreso! Ingresa otro");
+										break;
 									}
-								}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
-								$('#ingreso').show();
-								$('.form-group').show();
-								$('.nuevo-tipo').hide();
-							}).error(function(){alert("POR QUE SIGUES MAL!!!???")}); 
+								}
+							}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+							if(flag && nuevoIngreso === '') {
+								flag = false;
+								$("#nuevo-tipo").addClass("has-error");
+								alert("Ingresa un tipo de ingreso");
+							}
+							if (flag) {
+								var JSONObjectIngreso = {
+									"nombreIngreso":  nuevoIngreso,
+									"descripcionIngreso": "esto es nuevo"
+								};
+								$.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
+									$('#ingreso').empty();
+									$('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
+									$.get('rest.php').done(function(resultado){
+										for(var i=0; i<resultado.length; ++i){
+											var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
+														//alert(cadena);
+											$("#ingreso").append(cadena);
+										}
+									}).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+									$('#ingreso').show();
+									$('.form-group').show();
+									$('#nuevo-tipo').hide();
+								}).error(function(){alert("POR QUE SIGUES MAL!!!???")}); 
+							}
+							
 						});
 					};
 				});
 				$('#volver-form').on('click', function(e){
 					$('#ingreso').show();
 					$('.form-group').show();
-					$('.nuevo-tipo').hide();
+					$('#nuevo-tipo').hide();
 				});
 				$('#submit').on('click', function(e){ //captura evento click a boton submit
 						
