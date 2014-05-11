@@ -15,46 +15,9 @@ $(document).ready(function(){ // cuando este listo el documento
             $('.form-group').hide(); //esconde formulario
             $('#nuevo-tipo').show(); //muestra form nuevo tipo de ingreso
                         
-            $('#guardar').on('click', function(e){
+            $('#guardar').on('click', funcionGuardar{
                             
-                var nuevoIngreso = document.getElementById("ingreso1").value;
-                var flag = true
-                //VALIDACION PARA NUEVO TIPO DE INGRESO!
-                $.get('rest.php').done(function(resultado){
-                    for(var i=0; i<resultado.length; ++i){
-                        if (flag && nuevoIngreso === resultado[i]) {
-                            flag = false;
-                            $("#nuevo-tipo").addClass("has-error");
-                            alert("Ya existe ese tipo de ingreso! Ingresa otro");
-                            break;
-                        }
-                    }
-                }).error(function(){alert("POR QUE SIGUES MAL!!!???")});
-                if(flag && nuevoIngreso === '') {
-                    flag = false;
-                    $("#nuevo-tipo").addClass("has-error");
-                    alert("Ingresa un tipo de ingreso");
-                }
-                if (flag) {
-                    var JSONObjectIngreso = {
-                        "nombreIngreso":  nuevoIngreso,
-                        "descripcionIngreso": "esto es nuevo"
-                    };
-                    $.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
-                        $('#ingreso').empty();
-                        $('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
-                        $.get('rest.php').done(function(resultado){
-                            for(var i=0; i<resultado.length; ++i){
-                                var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
-                                //alert(cadena);
-                                $("#ingreso").append(cadena);
-                            }
-                        }).error(function(){alert("POR QUE SIGUES MAL!!!???")});
-                        $('#ingreso').show();
-                        $('.form-group').show();
-                        $('#nuevo-tipo').hide();
-                    }).error(function(){alert("POR QUE SIGUES MAL!!!???")}); 
-                }
+                
             });
         }
     });
@@ -114,3 +77,44 @@ $(document).ready(function(){ // cuando este listo el documento
         window.location="ingresos.html";
     });
 });
+
+var funcionGuardar = function(e){
+    var nuevoIngreso = document.getElementById("ingreso1").value;
+    var valido = true;
+    //VALIDACION PARA NUEVO TIPO DE INGRESO!
+    $.get('rest.php').done(function(resultado){
+        for(var i=0; i<resultado.length; ++i){
+            if (valido && nuevoIngreso === resultado[i]) {
+                valido = false;
+                $("#nuevo-tipo").addClass("has-error");
+                alert("Ya existe ese tipo de ingreso! Ingresa otro");
+                break;
+            }
+        }
+    }).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+    if(valido && nuevoIngreso === '') {
+        valido = false;
+        $("#nuevo-tipo").addClass("has-error");
+        alert("Ingresa un tipo de ingreso");
+    }
+    if (valido) {
+        var JSONObjectIngreso = {
+            "nombreIngreso":  nuevoIngreso,
+            "descripcionIngreso": "esto es nuevo"
+        };
+        $.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
+            $('#ingreso').empty();
+            $('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
+            $.get('rest.php').done(function(resultado){
+                for(var i=0; i<resultado.length; ++i){
+                    var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
+                    //alert(cadena);
+                    $("#ingreso").append(cadena);
+                }
+            }).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+            $('#ingreso').show();
+            $('.form-group').show();
+            $('#nuevo-tipo').hide();
+        }).error(function(){alert("POR QUE SIGUES MAL!!!???")}); 
+    }
+};
