@@ -15,10 +15,7 @@ $(document).ready(function(){ // cuando este listo el documento
             $('.form-group').hide(); //esconde formulario
             $('#nuevo-tipo').show(); //muestra form nuevo tipo de ingreso
                         
-            $('#guardar').on('click', funcionGuardar{
-                            
-                
-            });
+            $('#guardar').on('click', funcionGuardar);
         }
     });
     $('#volver-form').on('click', function(e){
