@@ -56,7 +56,7 @@ $(document).ready(function(){ // cuando este listo el documento
                     }).error(function(){alert("POR QUE SIGUES MAL!!!???")}); 
                 }
             });
-        };
+        }
     });
     $('#volver-form').on('click', function(e){
         $('#ingreso').show();
@@ -71,15 +71,15 @@ $(document).ready(function(){ // cuando este listo el documento
         if (ingreso === '0' || ingreso === '-1') {
             //alert("No selecciono un tipo de ingreso!");
             $('.type').addClass('has-error');
-        };
+        }
         if(monto === ''){
             //alert("No ingreso el monto del ingreso");
             $('.mont').addClass('has-error');
-        };
+        }
         if(fecha === ''){
             //alert("No selecciono una fecha");
             $('.fech').addClass('has-error');
-        };
+        }
         if (ingreso !== '0' && ingreso !== '-1' && monto !== '' && fecha !== ''){
 
             $('.type').removeClass('has-error');
@@ -108,7 +108,7 @@ $(document).ready(function(){ // cuando este listo el documento
         }
         else{
             alert('Errores en el formulario marcados con rojo');
-        };
+        }
     });
     $('#volver').on('click', function(e){
         window.location="ingresos.html";
