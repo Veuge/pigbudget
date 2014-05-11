@@ -15,42 +15,45 @@ $(document).ready(function(){ // cuando este listo el documento
 
 var funcionGuardar = function(e){
     var nuevoIngreso = document.getElementById("ingreso1").value;
-    var valido = true;
+    // var valido = true;
     //VALIDACION PARA NUEVO TIPO DE INGRESO!
-    $.get('rest.php').done(function(resultado){
-        for(var i=0; i<resultado.length; ++i){
-            if (valido && nuevoIngreso === resultado[i]) {
-                valido = false;
-                $("#nuevo-tipo").addClass("has-error");
-                alert("Ya existe ese tipo de ingreso! Ingresa otro");
-                break;
-            }
-        }
-    }).error(function(){alert("POR QUE SIGUES MAL!!!???")});
-    if(valido && nuevoIngreso === '') {
-        valido = false;
+    if(nuevoIngreso === '') {
         $("#nuevo-tipo").addClass("has-error");
-        alert("Ingresa un tipo de ingreso");
+        alert("No puede ser vacio");
+        // valido = false;
     }
-    if (valido) {
-        var JSONObjectIngreso = {
-            "nombreIngreso":  nuevoIngreso,
-            "descripcionIngreso": "esto es nuevo"
-        };
-        $.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
-            $('#ingreso').empty();
-            $('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
-            $.get('rest.php').done(function(resultado){
-                for(var i=0; i<resultado.length; ++i){
-                    var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
-                    //alert(cadena);
-                    $("#ingreso").append(cadena);
+    else{
+        $.get('rest.php').done(function(listaIngresos){
+            var ingresoValido = true;
+            for(var i = 0; i < listaIngresos.length; ++i) {
+                if (nuevoIngreso === listaIngresos[i].nombreIngreso){
+                    alert("Ya existe ese tipo de ingreso");
+                    $("#nuevo-tipo").addClass("has-error");
+                    ingresoValido = false;
+                    $('#ingreso1').val('');
+                    break;
                 }
-            }).error(function(){alert("POR QUE SIGUES MAL!!!???")});
-            $('#ingreso').show();
-            $('.form-group').show();
-            $('#nuevo-tipo').hide();
-        }).error(function(){alert("POR QUE SIGUES MAL!!!???")}); 
+            }
+            if (ingresoValido){
+                $('#ingreso').empty();
+                $('#ingreso').append('<option value="0">Seleccione tipo</option><option value="-1" class="new">Nuevo</option>');
+                var JSONObjectIngreso = {
+                    "nombreIngreso":  nuevoIngreso,
+                    "descripcionIngreso": "esto es nuevo"
+                };
+                $.post("restIngreso.php", JSONObjectIngreso).done(function(datos){
+                    $.get('rest.php').done(function(resultado){
+                        for(var i=0; i<resultado.length; ++i){
+                            var cadena = "<option value='"+resultado[i].codIngreso+"'>"+resultado[i].nombreIngreso+"</option>";
+                            $("#ingreso").append(cadena);
+                        }
+                    }).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+                    $('#ingreso').show();
+                    $('.form-group').show();
+                    $('#nuevo-tipo').hide();
+                }).error(function(){alert("POR QUE SIGUES MAL!!!???")});
+            }
+        });
     }
 };
 
