@@ -12,7 +12,7 @@
             //devuelve array de objetos usuario-ingreso
             $db = new Database ("pigbudget", "localhost", "root", "cinguifields");
             $result = $db->executeQuery("select ui.*, i.nombre_i from ingreso i inner join usuario_ingreso ui on i.cod_i = ui.cod_i order by ui.fecha_i");
-            $total = $db->executeQuery("select ifnull(sum(monto_i),'0') total from usuario_ingreso");
+            $total = $db->executeQuery("select ifnull(truncate(sum(monto_i),1),'0') total from usuario_ingreso");
             $arrayUsuarioIngreso = array();
 
             foreach ($result as $row) {
@@ -31,5 +31,20 @@
             }
 
             return $arrayUsuarioIngreso;
+        }
+
+        public static function totalPorDia(){
+            
+            $db = new Database ("pigbudget", "localhost", "root", "cinguifields");
+            $result = $db->executeQuery("select dayname(fecha_i) dia, sum(monto_i) totalFecha from usuario_ingreso WHERE fecha_i > DATE_SUB(NOW(), INTERVAL 1 WEEK) group by fecha_i");
+            $arrayFechaTotalIngreso = array();
+
+            foreach ($result as $row) {
+                $fechaTotal = new FechaTotalIngreso ();
+                $fechaTotal->diaIngreso = $row["dia"];
+                $fechaTotal->totalIngreso = $row['totalFecha'];
+                $arrayFechaTotalIngreso[] = $fechaTotal;
+            }
+            return $arrayFechaTotalIngreso;
         }
     }

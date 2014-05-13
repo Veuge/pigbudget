@@ -13,4 +13,8 @@
         public $nombreIngreso;
         public $descripcionIngreso;
     }
+    class FechaTotalIngreso {
+        public $diaIngreso;
+        public $totalIngreso;
+    }
 ?>
