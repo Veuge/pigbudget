@@ -36,12 +36,13 @@
         public static function totalPorDia(){
             
             $db = new Database ("pigbudget", "localhost", "root", "cinguifields");
-            $result = $db->executeQuery("select dayname(fecha_i) dia, sum(monto_i) totalFecha from usuario_ingreso WHERE fecha_i > DATE_SUB(NOW(), INTERVAL 1 WEEK) group by fecha_i");
+            $result = $db->executeQuery("select date_format(fecha_i, '%w') indice, dayname(fecha_i) dia, sum(monto_i) totalFecha from usuario_ingreso WHERE fecha_i > DATE_SUB(NOW(), INTERVAL 1 WEEK) group by fecha_i");
             $arrayFechaTotalIngreso = array();
 
             foreach ($result as $row) {
                 $fechaTotal = new FechaTotalIngreso ();
-                $fechaTotal->diaIngreso = $row["dia"];
+                $fechaTotal->indiceDia = $row['indice'];
+                $fechaTotal->diaIngreso = $row['dia'];
                 $fechaTotal->totalIngreso = $row['totalFecha'];
                 $arrayFechaTotalIngreso[] = $fechaTotal;
             }

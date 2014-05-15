@@ -14,6 +14,7 @@
         public $descripcionIngreso;
     }
     class FechaTotalIngreso {
+        public $indiceDia;
         public $diaIngreso;
         public $totalIngreso;
     }
