@@ -39,21 +39,6 @@
             options.animation = true;
         }
         
-        var data = {
-            labels : ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-            datasets : [
-                {
-                    fillColor : "rgba(99,123,133,0.4)",
-                    strokeColor : "rgba(220,220,220,1)",
-                    pointColor : "rgba(220,220,220,1)",
-                    pointStrokeColor : "#fff",
-                    data : [65,54,30,81,56,55,40]
-                }
-                
-            ]
-        }
-        var canvas = document.getElementById("grafica_ingreso");
-        var ctx = canvas.getContext("2d");
-        new Chart(ctx).Line(data, options);
+        
     }
     size(); // this kicks off the first drawing; note that the first call to size will animate the charts in.

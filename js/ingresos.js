@@ -46,6 +46,9 @@ $(document).ready(function(){
                         indice_actual = indice_actual + 7;
                     }
                     while (i - 1 < 0 || indice_actual > arrayFechaTotal[i-1].indiceDia) {
+                        if(indice_actual < 0){
+                            indice_actual = indice_actual + 7;
+                        }
                         labels [posicion_nueva] = dia [indice_actual];
                         values [posicion_nueva] = 0;
                         posicion_nueva --;
@@ -66,6 +69,15 @@ $(document).ready(function(){
             //     alert(labels[i]);
             //     alert(values[i]);
             // }
+            $("canvas").each(function(i,el){
+                // Set the canvas element's height and width to it's parent's height and width.
+                // The parent element is the div.canvas-container
+                $(el).attr({
+                    "width":$(el).parent().width(),
+                    "height":$(el).parent().outerHeight()
+                });
+            });
+
             var data = {
                 labels : labels,
                 datasets : [
