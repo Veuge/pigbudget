@@ -1,5 +1,5 @@
 $(document).ready(function(){
-            
+
     $.get('restIngreso.php').done(function(resultado){
 
         for(var i=0; i<resultado.length-1; ++i){
@@ -23,12 +23,6 @@ $(document).ready(function(){
         $('.grafica').show();
 
         $.get('restGraficas.php').done(function(arrayFechaTotal){
-
-            // for(var i=0; i<resultado.length-1; i++){
-            //     alert("Indice de dia: " + resultado[i].indiceDia);
-            //     alert("Dia : " + resultado[i].diaIngreso);
-            //     alert("Total: " + resultado[i].totalIngreso);
-            // }
             var dia = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
             var labels = [];
             var values = [];
@@ -63,45 +57,52 @@ $(document).ready(function(){
                     labels[posicion_nueva] = dia[arrayFechaTotal[i-1].indiceDia];
                     values[posicion_nueva] = arrayFechaTotal[i-1].totalIngreso;
                     posicion_nueva--;
-                
             }
-            // for(i = 0; i < labels.length-1; i++){
-            //     alert(labels[i]);
-            //     alert(values[i]);
-            // }
             $("canvas").each(function(i,el){
-                // Set the canvas element's height and width to it's parent's height and width.
-                // The parent element is the div.canvas-container
                 $(el).attr({
-                    "width":$(el).parent().width(),
-                    "height":$(el).parent().outerHeight()
+                    "width":$(el).parent().width()
                 });
             });
-
+            var max = funcionMayor(values);
+            
+            var stepWidth = Math.ceil(max/10);
+            // alert("El maximo es: " + max + "Valor: " + stepWidth);
+            var options = {
+                scaleOverride: true,
+                scaleSteps : 10,
+                scaleStepWidth : stepWidth
+            };
             var data = {
                 labels : labels,
                 datasets : [
                     {
-                        fillColor : "rgba(99,123,133,0.4)",
-                        strokeColor : "rgba(220,220,220,1)",
-                        pointColor : "rgba(220,220,220,1)",
+                        fillColor : "rgba(168, 211, 36,0.4)",
+                        strokeColor : "rgba(102, 153, 0, 1)",
+                        pointColor : "rgba(102, 153, 0, 1)",
                         pointStrokeColor : "#fff",
                         data : values
                     }
-                    
                 ]
             }
             var canvas = document.getElementById("grafica_ingreso");
             var ctx = canvas.getContext("2d");
-            var myChart = new Chart(ctx).Line(data);
+            var myChart = new Chart(ctx).Line(data, options);
         });
     })
     $('#get-back').on('click', function(e){
         $('.tabla').show();
         $('.grafica').hide();
-
-        
     });
-
     
 });
+
+var funcionMayor = function (vector) {
+    var max = 0;
+
+    for (var i = 0; i < vector.length; i++) {
+        if (parseInt(vector[i]) > max) {
+            max = parseInt(vector[i]);
+        }
+    }
+    return max;
+}

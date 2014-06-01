@@ -94,7 +94,6 @@ var funcionGuardarIngreso = function (e) { //captura evento click a boton submit
         $.post("rest.php", JSONObject).done(function( data ) { //AJAX con jquery envia a rest.php objeto JSON
             window.location="ingresos.html";
             var show = JSON.stringify (data); //show = cadena de objeto JSON
-            alert( "Data Loaded: " + show ); //muestra cadena de objeto json
         }).error(function(){alert("error!!!")}); //en caso de error muestra mensaje
     }
     else{

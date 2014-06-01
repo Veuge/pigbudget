@@ -2,8 +2,8 @@
     //REST USUARIO_INGRESO
     //EJECUTAR ACCIONES DEPENDIENDO GET POST
     //enlace a archivos requeridos
-    require "./database/conexion.php"; 
-    require "./database/models.php";
+    require "/home/veuge/Documentos/Coding/pigbudget/database/conexion.php"; 
+    require "/home/veuge/Documentos/Coding/pigbudget/database/models.php";
     require "./database/usuarioIngresoService.php";
     require "./database/ingresoService.php";
 

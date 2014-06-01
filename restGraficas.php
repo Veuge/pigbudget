@@ -1,6 +1,6 @@
 <?php 
-    require "./database/conexion.php"; 
-    require "./database/models.php";
+    require "/home/veuge/Documentos/Coding/pigbudget/database/conexion.php"; 
+    require "/home/veuge/Documentos/Coding/pigbudget/database/models.php";
     require "./database/usuarioIngresoService.php";
 
     header('Content-Type: application/json');
